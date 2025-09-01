@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Dashboard</title>
+    <link rel="icon" href="https://cdn.oaistatic.com/assets/favicon-miwirzcw.ico" sizes="32x32" />
+    <link rel="stylesheet" href="./assets/css/output.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors">
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-18 right-4 z-50 space-y-4">
+        <!-- Toast templates will be inserted here dynamically -->
+    </div>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Modern Sidebar -->
+        <aside id="sidebar"
+            class="sidebar-expanded sidebar-transition bg-white dark:bg-gray-800 shadow-lg flex flex-col border-r border-gray-200 dark:border-gray-700">
+            <!-- Sidebar Header with Logo and Toggle -->
+            <div class="px-4 py-3 flex items-center justify-between flex-row">
+                <a href="index.html">
+                    <div id="logo" class="flex items-center space-x-3 overflow-hidden">
+                        <div class="bg-indigo-600 p-2 rounded-lg">
+                            <i class="fas fa-chart-pie text-xl text-white"></i>
+                        </div>
+                        <span id="logo-text"
+                            class="text-xl font-bold text-gray-800 dark:text-white whitespace-nowrap">AnalyticsPro</span>
+                    </div>
+                </a>
+                <button id="toggle-sidebar"
+                    class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none transition-colors">
+                    <!-- Replace the Font Awesome icon with your SVG -->
+
+                    <svg class="sidebar-open hidden" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                        viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M21.97 15V9C21.97 4 19.97 2 14.97 2H8.96997C3.96997 2 1.96997 4 1.96997 9V15C1.96997 20 3.96997 22 8.96997 22H14.97C19.97 22 21.97 20 21.97 15Z"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
+                        <path d="M7.96997 2V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <path d="M14.97 9.43994L12.41 11.9999L14.97 14.5599" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            transform="scale(-1, 1) translate(-27.38, 0)"></path>
+                    </svg>
+                    <svg class="sidebar-close" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
+                        viewBox="0 0 24 24" fill="none">
+                        <path
+                            d="M21.97 15V9C21.97 4 19.97 2 14.97 2H8.96997C3.96997 2 1.96997 4 1.96997 9V15C1.96997 20 3.96997 22 8.96997 22H14.97C19.97 22 21.97 20 21.97 15Z"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
+                        <path d="M7.96997 2V22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <path d="M14.97 9.43994L12.41 11.9999L14.97 14.5599" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Sidebar Content with Modern Navigation -->
+            <div class="flex-1 overflow-y-auto py-4 custom-scrollbar">
+                <nav>
+                    <div class="px-4 mb-6">
+                        <p class="text-xs uppercase text-gray-500 dark:text-gray-400 tracking-wider mb-2 px-2"
+                            id="menu-title">Menu</p>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link active-sidebar-link">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <span
+                                        class="sidebar-item text-gray-700 dark:text-gray-200 font-medium">Dashboard</span>
+                                </a>
+                            </li>
+                            <li>
+                                <div>
+                                    <button id="users-toggle"
+                                        class="w-full flex items-center justify-between p-2 text-gray-900 dark:text-white collapsible-toggle">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-users sidebar-icon"></i>
+                                            <span class="sidebar-item">Users</span>
+                                        </div>
+                                        <i class="fas fa-chevron-down users-icon collapsible-icon"
+                                            id="collapsed-icon"></i>
+                                    </button>
+                                    <div id="users-items" class="collapsible-content pl-6 space-y-2">
+                                        <a href="#"
+                                            class="sidebar-link flex items-center p-2 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 space-x-3">
+                                            <i class="fas fa-user-plus sidebar-icon"></i>
+                                            <span class="sidebar-item">Add User</span>
+                                        </a>
+                                        <a href="#"
+                                            class="sidebar-link flex items-center p-2 rounded-lg hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 space-x-3">
+                                            <i class="fas fa-user-edit sidebar-icon"></i>
+                                            <span class="sidebar-item">Edit Users</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Analytics</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Messages</span>
+                                    <span
+                                        class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full messages-item">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Users</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="px-4 mb-6">
+                        <p class="text-xs uppercase text-gray-500 dark:text-gray-400 tracking-wider mb-2 px-2"
+                            id="secondary-title">Tools</p>
+                        <ul class="space-y-1">
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Calendar</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Reports</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="flex items-center space-x-3 p-2 rounded-lg sidebar-link hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <div class="sidebar-icon w-6 text-center text-gray-500 dark:text-gray-400">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </div>
+                                    <span class="sidebar-item text-gray-700 dark:text-gray-200">Statistics</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Sidebar Footer with User Profile and Theme Toggle -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between mb-4 flex-row">
+                    <div id="footer-profile" class="flex items-center space-x-3">
+                        <img src="./assets/images/user.png" alt="User"
+                            class="rounded-full w-10 h-10 object-cover border-2 border-indigo-500">
+                        <div class="sidebar-item">
+                            <p class="font-medium text-gray-800 dark:text-white">John Doe</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Admin</p>
+                        </div>
+                    </div>
+                    <button id="sidebar-theme-toggle"
+                        class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none transition-colors">
+                        <svg class="size-6 moon dark:hidden" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M20.2496 14.1987C19.5326 14.3951 18.7782 14.5 18 14.5C13.3056 14.5 9.5 10.6944 9.5 5.99999C9.5 5.22185 9.60487 4.4674 9.80124 3.75043C6.15452 4.72095 3.46777 8.04578 3.46777 11.9981C3.46777 16.7114 7.28864 20.5323 12.0019 20.5323C15.9543 20.5323 19.2791 17.8455 20.2496 14.1987ZM20.5196 12.5328C19.7378 12.8346 18.8882 13 18 13C14.134 13 11 9.86598 11 5.99999C11 5.11181 11.1654 4.26226 11.4671 3.48047C11.6142 3.09951 11.7935 2.73464 12.0019 2.38923C12.0888 2.24526 12.1807 2.10466 12.2774 1.9677C12.1858 1.96523 12.094 1.96399 12.0019 1.96399C11.4758 1.96399 10.9592 2.00448 10.455 2.0825C5.64774 2.8264 1.96777 6.98251 1.96777 11.9981C1.96777 17.5398 6.46021 22.0323 12.0019 22.0323C17.0176 22.0323 21.1737 18.3523 21.9176 13.545C21.9956 13.0408 22.0361 12.5242 22.0361 11.9981C22.0361 11.906 22.0348 11.8141 22.0323 11.7226C21.8953 11.8193 21.7547 11.9112 21.6107 11.9981C21.2653 12.2065 20.9005 12.3858 20.5196 12.5328Z"
+                                fill="currentColor"></path>
+                            <path
+                                d="M16.3333 5.33333L17.5 3L18.6667 5.33333L21 6.5L18.6667 7.66667L17.5 10L16.3333 7.66667L14 6.5L16.3333 5.33333Z"
+                                fill="currentColor"></path>
+                        </svg>
+                        <svg class="size-6 sun dark:block" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12.0002 3.29071V1.76746M5.8418 18.1585L4.7647 19.2356M12.0002 22.2326V20.7093M19.2357 4.76456L18.1586 5.84166M20.7095 12H22.2327M18.1586 18.1584L19.2357 19.2355M1.76758 12H3.29083M4.76462 4.7645L5.84173 5.8416M15.7123 8.2877C17.7626 10.338 17.7626 13.6621 15.7123 15.7123C13.6621 17.7626 10.338 17.7626 8.2877 15.7123C6.23745 13.6621 6.23745 10.338 8.2877 8.2877C10.338 6.23745 13.6621 6.23745 15.7123 8.2877Z"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="square"
+                                stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+                <a href="login.html"
+                    class="w-full flex items-center justify-center space-x-2 p-2 rounded-lg bg-red-600 hover:bg-red-700 transition-colors focus:ring-red-400">
+                    <i class="fas fa-sign-out-alt text-white"></i>
+                    <span class="sidebar-item text-white font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Navbar -->
+            <header
+                class="fixed z-1 border-b border-gray-200 dark:border-gray-700 bg-white/10 dark:bg-gray-800/10 backdrop-blur-md ">
+                <div class="flex items-center justify-between px-6 py-4">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-xl font-semibold text-gray-800 dark:text-white">Dashboard Overview</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="dark-mode-toggle"
+                            class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none transition-colors">
+                            <svg class="size-6 moon dark:hidden" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M20.2496 14.1987C19.5326 14.3951 18.7782 14.5 18 14.5C13.3056 14.5 9.5 10.6944 9.5 5.99999C9.5 5.22185 9.60487 4.4674 9.80124 3.75043C6.15452 4.72095 3.46777 8.04578 3.46777 11.9981C3.46777 16.7114 7.28864 20.5323 12.0019 20.5323C15.9543 20.5323 19.2791 17.8455 20.2496 14.1987ZM20.5196 12.5328C19.7378 12.8346 18.8882 13 18 13C14.134 13 11 9.86598 11 5.99999C11 5.11181 11.1654 4.26226 11.4671 3.48047C11.6142 3.09951 11.7935 2.73464 12.0019 2.38923C12.0888 2.24526 12.1807 2.10466 12.2774 1.9677C12.1858 1.96523 12.094 1.96399 12.0019 1.96399C11.4758 1.96399 10.9592 2.00448 10.455 2.0825C5.64774 2.8264 1.96777 6.98251 1.96777 11.9981C1.96777 17.5398 6.46021 22.0323 12.0019 22.0323C17.0176 22.0323 21.1737 18.3523 21.9176 13.545C21.9956 13.0408 22.0361 12.5242 22.0361 11.9981C22.0361 11.906 22.0348 11.8141 22.0323 11.7226C21.8953 11.8193 21.7547 11.9112 21.6107 11.9981C21.2653 12.2065 20.9005 12.3858 20.5196 12.5328Z"
+                                    fill="currentColor"></path>
+                                <path
+                                    d="M16.3333 5.33333L17.5 3L18.6667 5.33333L21 6.5L18.6667 7.66667L17.5 10L16.3333 7.66667L14 6.5L16.3333 5.33333Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                            <svg class="size-6 sun dark:block" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.0002 3.29071V1.76746M5.8418 18.1585L4.7647 19.2356M12.0002 22.2326V20.7093M19.2357 4.76456L18.1586 5.84166M20.7095 12H22.2327M18.1586 18.1584L19.2357 19.2355M1.76758 12H3.29083M4.76462 4.7645L5.84173 5.8416M15.7123 8.2877C17.7626 10.338 17.7626 13.6621 15.7123 15.7123C13.6621 17.7626 10.338 17.7626 8.2877 15.7123C6.23745 13.6621 6.23745 10.338 8.2877 8.2877C10.338 6.23745 13.6621 6.23745 15.7123 8.2877Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="square"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                        </button>
+                        <div class="relative">
+                            <button
+                                class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none transition-colors relative">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                                <span class="text-gray-700 dark:text-gray-200 hidden md:inline">John Doe</span>
+                                <img src="./assets/images/user.png" alt="User"
+                                    class="rounded-full w-8 h-8 object-cover">
+                            </button>
+                            <div id="user-menu"
+                                class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-20 border border-gray-200 dark:border-gray-700">
+                                <a href="profile.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Your
+                                    Profile</a>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto px-6 pt-24 bg-gray-50 dark:bg-gray-900/50 custom-scrollbar">
+                <!-- Button to open first modal -->
+                <button class="open-modal bg-indigo-600 text-white px-4 py-2 rounded-lg m-4"
+                    data-modal="order-modal">View Modal</button>
+                <button class="open-modal bg-indigo-600 text-white px-4 py-2 rounded-lg m-4"
+                    onclick="showToast('success', 'Revenue data updated!')">View toast</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 card-hover transition-all duration-300 animate-fadeIn border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-300 text-sm font-medium">Total Revenue</p>
+                                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">$45,231</h3>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i> 12% from last month
+                                </p>
+                            </div>
+                            <div class="bg-indigo-100 dark:bg-indigo-900 p-3 rounded-lg">
+                                <i class="fas fa-dollar-sign text-indigo-600 dark:text-indigo-300 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 card-hover transition-all duration-300 animate-fadeIn border border-gray-100 dark:border-gray-700"
+                        style="animation-delay: 0.1s">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-300 text-sm font-medium">Subscriptions</p>
+                                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">+2,340</h3>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i> 18% from last month
+                                </p>
+                            </div>
+                            <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-lg">
+                                <i class="fas fa-users text-blue-600 dark:text-blue-300 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 card-hover transition-all duration-300 animate-fadeIn border border-gray-100 dark:border-gray-700"
+                        style="animation-delay: 0.2s">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-300 text-sm font-medium">Active Users</p>
+                                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">12,345</h3>
+                                <p class="text-red-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-down mr-1"></i> 3% from last month
+                                </p>
+                            </div>
+                            <div class="bg-green-100 dark:bg-green-900 p-3 rounded-lg">
+                                <i class="fas fa-user-check text-green-600 dark:text-green-300 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 card-hover transition-all duration-300 animate-fadeIn border border-gray-100 dark:border-gray-700"
+                        style="animation-delay: 0.3s">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 dark:text-gray-300 text-sm font-medium">Pending Requests</p>
+                                <h3 class="text-2xl font-bold text-gray-800 dark:text-white">124</h3>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up mr-1"></i> 8% from last month
+                                </p>
+                            </div>
+                            <div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-lg">
+                                <i class="fas fa-clock text-yellow-600 dark:text-yellow-300 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Main Chart -->
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 lg:col-span-2 card-hover transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Revenue Overview</h2>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 text-xs bg-indigo-600 text-white rounded-lg">Month</button>
+                                <button
+                                    class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg">Week</button>
+                                <button
+                                    class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg">Day</button>
+                            </div>
+                        </div>
+                        <!-- Chart placeholder -->
+                        <div class="h-80 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                            <p class="text-gray-500 dark:text-gray-300">Revenue Chart Area</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 card-hover transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-6">Recent Activity</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-indigo-100 dark:bg-indigo-900 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-shopping-cart text-indigo-600 dark:text-indigo-300"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 dark:text-white">New order #1234</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">5 min ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-green-100 dark:bg-green-900 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-user-plus text-green-600 dark:text-green-300"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 dark:text-white">New user registered</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">1 hour ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-yellow-100 dark:bg-yellow-900 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-exclamation-triangle text-yellow-600 dark:text-yellow-300"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 dark:text-white">High memory usage</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">3 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 dark:bg-blue-900 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-upload text-blue-600 dark:text-blue-300"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 dark:text-white">New file uploaded</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">5 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-purple-100 dark:bg-purple-900 p-2 rounded-lg mr-3">
+                                    <i class="fas fa-comment-alt text-purple-600 dark:text-purple-300"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800 dark:text-white">New comment</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">1 day ago</p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#"
+                            class="block text-center mt-4 text-indigo-600 dark:text-indigo-300 hover:underline">View all
+                            activity</a>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Table -->
+                <div
+                    class="mt-5 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden card-hover transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                    <div
+                        class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Recent Orders</h2>
+                        <button class="text-sm text-indigo-600 dark:text-indigo-300 hover:underline">View All</button>
+
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <table id="Datatable" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Order</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Customer</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Status</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Date</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4567</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        John Smith</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-15</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $245.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4566</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Sarah Johnson</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Pending</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-14</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $125.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4565</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Michael Brown</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-14</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $345.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4564</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Emily Davis</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Cancelled</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-13</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $89.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4563</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Robert Wilson</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Shipped</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-12</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $199.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div
+                    class="mt-5 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden card-hover transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                    <div
+                        class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Recent Orders</h2>
+                        <div>
+                            <button id="add-row-btn"
+                                class="mr-4 text-sm bg-indigo-600 text-white px-3 py-1 rounded-lg hover:bg-indigo-700 transition-colors">Add
+                                Order</button>
+                            <button class="text-sm text-indigo-600 dark:text-indigo-300 hover:underline">View
+                                All</button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto p-4">
+                        <table id="DatatableEditable" class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Order</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Customer</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Status</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                                        data-type="date">Date</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4567</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        John Smith</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-15</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $245.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4566</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Sarah Johnson</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Pending</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-14</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $125.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4565</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Michael Brown</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-14</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $345.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4564</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Emily Davis</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Cancelled</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-13</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $89.00</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        #4563</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        Robert Wilson</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Shipped</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        2023-06-12</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        $199.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- File Upload Section -->
+                <div
+                    class="mt-5 bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8 card-hover transition-all duration-300 border border-gray-100 dark:border-gray-700">
+                    <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Upload Files</h2>
+
+                    <!-- Drag and Drop Zone -->
+                    <div id="drop-zone"
+                        class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center transition-all duration-300 hover:border-indigo-400 dark:hover:border-indigo-500 mb-4">
+                        <div class="flex flex-col items-center justify-center space-y-3">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 dark:text-gray-500"></i>
+                            <p class="text-gray-500 dark:text-gray-400">Drag & drop files here or</p>
+                            <label for="file-upload" class="cursor-pointer">
+                                <span
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Browse
+                                    Files</span>
+                                <input id="file-upload" type="file" class="hidden" multiple>
+                            </label>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">Supports: PDF, JPG, PNG, DOCX up to
+                                10MB</p>
+                        </div>
+                    </div>
+
+                    <!-- Upload Progress -->
+                    <div id="upload-progress" class="hidden">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Uploading...</span>
+                            <span id="progress-percent" class="text-sm text-gray-500 dark:text-gray-400">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded Files List -->
+                    <div id="uploaded-files" class="mt-6 space-y-3 hidden">
+                        <h3 class="text-md font-medium text-gray-700 dark:text-gray-300">Uploaded Files</h3>
+                        <div id="files-list" class="space-y-2">
+                            <!-- Files will be listed here -->
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+            <!-- Modal -->
+            <div id="order-modal" class="modal hidden fixed inset-0 z-50 w-full h-full bg-black bg-opacity-50">
+                <div
+                    class="modal-content bg-white dark:bg-gray-800 text-gray-800 dark:text-white mx-auto mt-[15%] p-6 rounded-lg w-11/12 max-w-md relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                        class="w-5 h-6 absolute top-2 right-2 cursor-pointer close-btn">
+                        <path fill-rule="evenodd"
+                            d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <h2 class="text-xl font-bold mb-4">Order Details</h2>
+                    <p class="mb-4 text-gray-600 dark:text-gray-300">Select an order from the table to view details
+                        here.</p>
+                    <button class="close-modal px-4 py-2 bg-indigo-600 text-white rounded-lg">Close</button>
+                </div>
+            </div>
+            <!-- Footer -->
+            <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-6">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">© 2023 AnalyticsPro. All rights reserved.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#"
+                            class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Terms</a>
+                        <a href="#"
+                            class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Privacy</a>
+                        <a href="#"
+                            class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">Contact</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!-- Add DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- Before closing body -->
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="./assets/js/tailwind.js"></script>
+    <script src="./assets/js/script.js"></script>
+    <script src="./assets/js/dataTables.js"></script>
+</body>
+
+</html>
